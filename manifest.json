@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "Linuxcu only say Beyler",
+  "version": "1.0",
+  "description": "Linuxcunun mesajlarını değiştirir",
+  "permissions": [
+    "activeTab"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["*://btt.community/*"],
+      "js": ["linuxcu.js"],
+      "run_at": "document_end"
+    }
+  ]
+}

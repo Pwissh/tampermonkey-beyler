@@ -10,25 +10,103 @@
 (function() {
     'use strict';
 
-    // yeni chat mesajlarını incelemek için
+    console.log('=== BEYLER ===');
+
+    let processedMessages = new Set(); // Aynı mesajı tekrar işlememeye için
+
+    function modifyLinuxcuMessages() {
+        // Tüm chat mesaj containerlarını bul
+        const messageContainers = document.querySelectorAll('.chat-message-container');
+
+        messageContainers.forEach(container => {
+            // Username elementini bul
+            const usernameElement = container.querySelector('.chat-message-info__username__name');
+
+            if (usernameElement && usernameElement.textContent.trim() === 'linuxcu1') {
+
+                // Bu mesajı daha önce işledik mi kontrol et
+                const messageId = container.getAttribute('data-id') || container.innerHTML.substring(0, 50);
+
+                if (!processedMessages.has(messageId)) {
+                    console.log('LINUXCU1 MESAJI BULUNDU!');
+
+                    // Mesaj içeriğini bul
+                    const messageContent = container.querySelector('.chat-cooked');
+
+                    if (messageContent) {
+                        const originalText = messageContent.innerHTML;
+                        console.log('Eski mesaj:', originalText);
+
+                        // Mesajı değiştir
+                        messageContent.innerHTML = '<p>beyler</p>';
+
+                        console.log('Mesaj "beyler" olarak değiştirildi!');
+                        processedMessages.add(messageId);
+                    }
+                }
+            }
+        });
+    }
+
+    // Mutasyona uğramış Observer  yeni mesajları yakalamak için
     const observer = new MutationObserver((mutations) => {
+        let shouldProcess = false;
+
         mutations.forEach((mutation) => {
             mutation.addedNodes.forEach((node) => {
-                if (node.nodeType === 1) { // element mi değil mi kontrol et
-                    const usernameElement = node.querySelector('.chat-message-info__username__name'); // username seçici
-                    const messageElement = node.querySelector('.chat-message-text .chat-cooked'); // mesaj seçici
-
-                    if (usernameElement && messageElement && usernameElement.textContent.trim() === 'linuxcu1') {
-                        messageElement.innerHTML = '<p>beyler</p>'; // mesajı değiştir
-                    }
+                if (node.nodeType === 1 && node.classList) {
+                    if (node.classList.contains('chat-message-container') ||
+                        node.querySelector && node.querySelector('.chat-message-container')) {
+                        shouldProcess = true;
+                        }
                 }
             });
         });
+
+        if (shouldProcess) {
+            setTimeout(modifyLinuxcuMessages, 100);
+        }
     });
 
-    // chat containerını incele
-    const chatContainer = document.querySelector('.chat-message-container'); // mesaj seçici container edition
-    if (chatContainer) {
-        observer.observe(chatContainer.parentNode, { childList: true, subtree: true }); // yeni mesajları incele container edition
+    // Observer'ı başlat
+    function startObserver() {
+        const targetNode = document.body;
+
+        observer.observe(targetNode, {
+            childList: true,
+            subtree: true
+        });
+
+        console.log('Observer başlatıldı');
     }
+
+    // İlk yükleme - mevcut mesajları kontrol et
+    function checkInitialMessages() {
+        console.log('Mevcut mesajlar kontrol ediliyor...');
+        modifyLinuxcuMessages();
+
+        // Her 2 saniyede bir kontrol et (güvenlik için)
+        setInterval(() => {
+            modifyLinuxcuMessages();
+        }, 2000);
+    }
+
+    // Başlangıç
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+            startObserver();
+            setTimeout(checkInitialMessages, 1000);
+        });
+    } else {
+        startObserver();
+        setTimeout(checkInitialMessages, 1000);
+    }
+
+    // Sayfa değiştiğinde temizlik
+    window.addEventListener('beforeunload', () => {
+        observer.disconnect();
+    });
+
+    console.log('Eklenti hazır - linuxcu1 mesajları izleniyor...');
+
 })();
