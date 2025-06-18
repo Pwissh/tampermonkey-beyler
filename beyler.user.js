@@ -2,12 +2,21 @@
 // @name         beyler
 // @namespace    http://tampermonkey.net/
 // @version      0.1b
-// @description  Replace every chat message from linuxcu1 with "beyler"
+// @description  Replaces every chat message from linuxcu1 with "beyler"
 // @match        https://btt.community/chat/c/sohbet/2
 // @grant        none
 // ==/UserScript==
 
-(function() {
+/*
+ Author: pwish - https://github.com/Pwissh / https://gitlab.com/pwish/
+ Date: June 18, 2025
+ Contribution: ibrahimsql - https://x.com/ibrahimsql / https://github.com/ibrahmsql
+ okunabilir kod yazmak çok zor -pwish
+ bc im f^cking Invincible
+ we made this extension bc user "linuxcu1" kept typing "guys" then asking dumb qs lol so we made it as a joke hey linuxcu f u :D
+ */
+
+ (function() {
     'use strict';
 
     console.log('=== BEYLER ===');
